@@ -1,0 +1,7 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="C:\Users\User\Desktop\APBD\Tutorial12\tutorial-12-AngelinaMukha\MovieApp\MovieApp\Client\bin\Debug\net5.0\wwwroot\" />
+  <ContentRoot BasePath="/" Path="C:\Users\User\Desktop\APBD\Tutorial12\tutorial-12-AngelinaMukha\MovieApp\MovieApp\Client\obj\Debug\net5.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication" Path="C:\Users\User\.nuget\packages\microsoft.aspnetcore.components.webassembly.authentication\5.0.6\build\..\staticwebassets\" />
+  <ContentRoot BasePath="_content/Radzen.Blazor" Path="C:\Users\User\.nuget\packages\radzen.blazor\3.5.1\build\..\staticwebassets\" />
+  <ContentRoot BasePath="_content/Syncfusion.Blazor" Path="C:\Users\User\.nuget\packages\syncfusion.blazor\19.1.0.67\build\..\staticwebassets\" />
+</StaticWebAssets>

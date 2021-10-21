@@ -1,0 +1,4 @@
+﻿select * from movies;
+insert into Movies(Title, Summary, InTheaters, Trailer, ReleaseDate, Poster) values('Mulan)','Mulan is a film about strong women ehgfv shefbJSEf hefbfbzs fhbjfhvmae fjhefbuye eyfgvshje hfey smth smth.','true', 'https://youtu.be/KK8FHdFluOQ', '05-06-21', 'https://m.media-amazon.com/images/M/MV5BNDliY2E1MjUtNzZkOS00MzJlLTgyOGEtZDg4MTI1NzZkMTBhXkEyXkFqcGdeQXVyNjMwMzc3MjE@._V1_.jpg');
+insert into Movies(Title, Summary, InTheaters, Trailer, ReleaseDate, Poster) values('Mulan','Mulan is a film about strong women ehgfv shefbJSEf hefbfbzs fhbjfhvmae fjhefbuye eyfgvshje hfey smth smth.','true', 'https://www.youtube.com/embed/tgbNymZ7vqY', '05-06-21', 'https://m.media-amazon.com/images/M/MV5BNDliY2E1MjUtNzZkOS00MzJlLTgyOGEtZDg4MTI1NzZkMTBhXkEyXkFqcGdeQXVyNjMwMzc3MjE@._V1_.jpg');
+

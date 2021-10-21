@@ -1,0 +1,94 @@
+﻿@page "/AddMovie"
+
+@inject NavigationManager NavManager
+@inject HttpClient httpClient
+@inject IJSRuntime js
+@inject IMoviesRepository moviesRepository
+
+<h1 style="font-family: 'Rock Salt', cursive">Create movie</h1>
+<br>
+    <div class="row">
+        <div class="column">
+            <lable>Title: </lable>
+            <input type="text" @bind="@movie.Title">
+            <br>
+            <br>
+            <lable>Summary: </lable>
+            <input type="text" @bind="@movie.Summary">
+            <br>
+            <br>
+            <lable>InTheaters: </lable>
+            <input type="checkbox" @bind="@movie.InTheaters">
+            <br>
+            <br>
+            <lable>ReleaseDate: </lable>
+            <input type="date" @bind="@movie.ReleaseDate" @bind:format="yyyy-MM-dd">
+        </div>
+        <div class="column">
+
+            <lable>Poster: </lable>
+            <input style="border-radius: 10px;" @bind="@movie.Poster">
+            <br><br>
+            <style>
+                lable, input {
+                    font-family: 'Rock Salt', cursive;
+                    border-radius: 10px;
+                    text-align: center;
+                }
+            </style>
+        </div>
+        <div class="column">
+            <lable>Trailer: </lable>
+            <input style="border-radius: 10px;" type="text"  @bind="@movie.Trailer"><br><br>
+        </div>
+    </div>
+    <br>
+    <style>
+        .column {
+            float: left;
+            width: 30%;
+            text-align: center;
+        }
+
+        .lable, input {
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+    <button class="btn btn-edit" @onclick="NewForm" type="button" style="background-color:orangered; border-color: red; color:white; border-radius: 10px; float: left;">Return</button>
+    <button class="btn btn-edit" @onclick="@(() => AddingMovie(movie))" type="button" style="background-color:limegreen; border-color: green; color:white; border-radius: 10px; float: right;">Save</button>
+
+@code {
+    public List<Movie> Movies { get; set; }
+    public Movie movie { get; set; } = new Movie();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        var result = await httpClient.GetAsync("/api/movies");
+        var data = await result.Content.ReadAsStringAsync();
+        Movies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Movie>>(data);
+    }
+
+    private async Task NewForm()
+    {
+        await Task.Run(() => NavManager.NavigateTo("/movies"));
+    }
+
+    private async Task AddingMovie(Movie movie)
+    {
+        Movie NewMovie = new Movie
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Summary = movie.Summary,
+            InTheaters = movie.InTheaters,
+            ReleaseDate = movie.ReleaseDate,
+            Poster = movie.Poster,
+            Trailer = movie.Trailer
+        };
+        await moviesRepository.CreateMovie(NewMovie);
+        await OnInitializedAsync();
+    }
+}

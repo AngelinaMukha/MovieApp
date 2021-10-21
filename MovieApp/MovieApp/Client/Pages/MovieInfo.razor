@@ -1,0 +1,81 @@
+﻿@page "/movie/{IdMovie}/{MovieTitle}"
+
+@inject NavigationManager NavManager
+@inject HttpClient httpClient
+@inject IJSRuntime js
+
+<h1 style="        font-family: 'Rock Salt', cursive;
+        float: left;"> Movie's details</h1>
+<button @onclick="NewForm" type="button" style="background-color:blueviolet; color:white; border-radius: 10px; float: right; width: 150px; height: 50px; font-size:25px">Return</button>
+<br>
+
+@if (Movies == null)
+{
+    <img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" alt="loading" />
+}
+else
+{
+    @foreach (var m in Movies)
+    {
+        @if (m.Id.ToString() == IdMovie)
+        {
+<table class="table">
+    <tr>
+        <td rowspan="2" width="30%" align="center">
+            <img src="@m.Poster" alt="Poster" class="movie-poster" width="150" height="210" />
+        </td>
+        <td width="70%"><h3>@m.Title</h3></td>
+    </tr>
+    <tr>
+        <th width="70%">@m.Summary</th>
+    </tr>
+    <tr>
+        <label align="center">ReleaseDate: </label>
+        <br>
+        <br>
+        <td>@m.ReleaseDate</td>
+    </tr>
+    <tr>
+        <label align="center">InTheaters: </label>
+        <br>
+        <br>
+        <td>@m.InTheaters</td>
+    </tr>
+</table>
+            <br>
+            <label>Trailer</label><br><br>
+            <iframe width="640" height="360"
+                    src=@m.Trailer>
+            </iframe>
+            <style>
+                th, td, label {
+                    font-family: 'Rock Salt', cursive;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+            </style>
+        }
+    }
+}
+@code {
+    public List<Movie> Movies { get; set; }
+    [Parameter] public string IdMovie { get; set; }
+    [Parameter] public string MovieTitle { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        var result = await httpClient.GetAsync("/api/movies");
+        var data = await result.Content.ReadAsStringAsync();
+        Movies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Movie>>(data);
+    }
+
+    private async Task NewForm()
+    {
+        await Task.Run(() => NavManager.NavigateTo("/movies"));
+    }
+}

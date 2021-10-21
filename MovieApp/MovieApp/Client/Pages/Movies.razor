@@ -1,0 +1,45 @@
+﻿@page "/movies"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IMoviesRepository moviesRepository
+@attribute [Authorize]
+@inject HttpClient httpClient
+@inject NavigationManager NavManager
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<h3>Movies</h3><br><br>
+<div>
+    <h3 style="float: left">In theaters</h3>
+    <!--<NavLink class="nav-link" href="genres">
+        <span class="oi oi-plus" aria-hidden="true"></span> Genres
+    </NavLink>-->
+    <button type="button" style="background-color:blueviolet; color:white; border-radius: 10px; float: right; width: 100; height: 30px; font-size:15px; font-family: 'Rock Salt';"
+            @onclick="@AddMovie">
+        Add Movie
+    </button>
+    <br><br>
+    <MoviesList Movies="MoviesList" />
+</div>
+
+@code {
+
+    private List<Movie> MoviesList;
+    protected async override Task OnInitializedAsync()
+    {
+        //await Task.Delay(1000);
+        Storage.Counter++;
+        var st = await localStorage.GetItemAsync<Person>("actor");
+        await GetMovies();
+    }
+
+    private async Task GetMovies()
+    {
+        MoviesList = await moviesRepository.GetMovies();
+    }
+    private async Task AddMovie()
+    {
+        await Task.Run(() => NavManager.NavigateTo("/addMovie"));
+    }
+}

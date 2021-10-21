@@ -1,0 +1,39 @@
+﻿@inject IJSRuntime js
+@inject IMoviesRepository moviesRepository
+@inject HttpClient http
+
+
+<div class="movies-container">
+    <GenericList List="Movies">
+        <ElementTemplate Context="movie">
+            <IndividualMovie Movie="movie"
+                             DeleteMovie="DeleteMovie" @key="movie.Id" />
+        </ElementTemplate>
+    </GenericList>
+
+</div>
+
+@code {
+    [Parameter] public List<Movie> Movies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Storage.Counter++;
+        var result = await http.GetAsync("/api/movies");
+        var data = await result.Content.ReadAsStringAsync();
+        Movies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Movie>>(data);
+        base.OnInitialized();
+    }
+
+    private async Task DeleteMovie(Movie movie)
+    {
+        await js.MyFunction("custom message");
+        var confirmed = await js.Confirm($"Are you sure you want to delete {movie.Title}?");
+
+        if (confirmed)
+        {
+            await moviesRepository.DeleteMovie(movie.Id);
+            await OnInitializedAsync();
+        }
+    }
+}

@@ -1,0 +1,46 @@
+﻿<div class="individual-movie-container">
+    <table class="table">
+        <tr>
+            <!--<td @onclick="(()=>OnRowClicked(s.IdStudent))">@s.IdStudent</td>-->
+            <td rowspan="2" width="20%" align="center">
+                <a href="@movieURL">
+                    <img src="@Movie.Poster" alt="Poster" class="movie-poster" width="150" height="210" />
+                </a>
+            </td>
+            <td width="60%"><h3>@Movie.Title</h3></td>
+            <td rowspan="2" align="center" width="20%">
+                <a class="btn btn-info" href="/movies/edit/@Movie.Id">Edit</a><br><br>
+                <button type="button" class="btn btn-danger"
+                        @onclick="@(() => DeleteMovie.InvokeAsync(Movie))">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <th width="60%">@Movie.Summary</th>
+        </tr>
+    </table>
+    <style>
+        th, td {
+            font-family: 'Rock Salt', cursive;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+    </style>
+</div>
+
+
+
+@code {
+    [Parameter] public Movie Movie { get; set; }
+    [Parameter] public EventCallback<Movie> DeleteMovie { get; set; }
+    private string movieURL = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        movieURL = $"movie/{Movie.Id}/{Movie.Title.Replace(" ", "-")}";
+    }
+}

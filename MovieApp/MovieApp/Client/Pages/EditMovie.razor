@@ -1,0 +1,118 @@
+﻿@page "/movies/edit/{IdMovie}"
+@inject NavigationManager NavManager
+@inject HttpClient httpClient
+@inject IJSRuntime js
+@inject IMoviesRepository moviesRepository
+
+<h1 style="font-family: 'Rock Salt', cursive"> Movie's details</h1>
+<br>
+
+@if (Movies == null)
+{
+
+    <img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" alt="loading" />
+}
+else
+{
+    @foreach (var m in Movies)
+    {
+        @if (m.Id.ToString() == IdMovie)
+        {
+            <div class="row">
+                <div class="column">
+                    <lable>Title: </lable>
+                    <input type="text" @bind="@m.Title">
+                    <br>
+                    <br>
+                    <lable>Summary: </lable>
+                    <input type="text"  @bind="@m.Summary">
+                    <br>
+                    <br>
+                    <lable>InTheaters: </lable>
+                    <input type="checkbox" @bind="@m.InTheaters">
+                    <br>
+                    <br>
+                    <lable>ReleaseDate: </lable>
+                    <input type="date" @bind="@m.ReleaseDate" @bind:format="yyyy-MM-dd">
+                </div>
+                <div class="column">
+
+                    <lable>Poster: </lable>
+                    <input style="border-radius: 10px;" @bind="@m.Poster">
+                    <br><br>
+                    <img src=@m.Poster width="150" height="210" />
+                    <style>
+                        lable, input {
+                            font-family: 'Rock Salt', cursive;
+                            border-radius: 10px;
+                            text-align: center;
+                        }
+                    </style>
+                </div>
+                <div class="column">
+                    <lable>Trailer: </lable>
+                    <input style="border-radius: 10px;"@bind="@m.Trailer"><br><br>
+                    <video width="500" height="250" controls="controls">
+                        <source src="@m.Trailer">
+                    </video>
+                </div>
+            </div>
+            <br>
+            <style>
+                .column {
+                    float: left;
+                    width: 30%;
+                    text-align: center;
+                }
+
+                .lable, input {
+                    border-radius: 10px;
+                    text-align: center;
+                }
+            </style>
+            <button class="btn btn-edit" @onclick="NewForm" type="button" style="background-color:orangered; border-color: red; color:white; border-radius: 10px; float: left;">Return</button>
+            <button class="btn btn-edit" @onclick="@(() => Edit(m))" type="button" style="background-color:limegreen; border-color: green; color:white; border-radius: 10px; float: right;">Save</button>
+        }
+    }
+}
+@code {
+    public List<Movie> Movies { get; set; }
+    [Parameter] public string IdMovie { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        var result = await httpClient.GetAsync("/api/movies");
+        var data = await result.Content.ReadAsStringAsync();
+        Movies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Movie>>(data);
+    }
+
+    private async Task NewForm()
+    {
+        await Task.Run(() => NavManager.NavigateTo("/movies"));
+    }
+
+    private async Task Edit(Movie movie)
+    {
+        Movie NewMovie = new Movie
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Summary = movie.Summary,
+            InTheaters = movie.InTheaters,
+            ReleaseDate = movie.ReleaseDate,
+            Poster = movie.Poster,
+            Trailer = movie.Trailer
+        };
+
+        await js.MyFunction("custom message");
+        var confirmed = await js.Confirm($"Are you sure you want to edit?");
+
+        if (confirmed)
+        {
+            await moviesRepository.UpdateMovie(NewMovie);
+            await OnInitializedAsync();
+        }
+    }
+}
